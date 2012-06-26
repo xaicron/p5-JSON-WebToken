@@ -1,0 +1,30 @@
+This is Perl module JSON::WebToken.
+
+INSTALLATION
+
+JSON::WebToken installation is straightforward. If your CPAN shell is set up,
+you should just be able to do
+
+    % cpan JSON::WebToken
+or
+
+    % cpanm JSON::WebToken
+
+Download it, unpack it, then build it as per the usual:
+
+    % perl Makefile.PL
+    % make && make test
+
+Then install it:
+
+    % make install
+
+DOCUMENTATION
+
+JSON::WebToken documentation is available as in POD. So you can do:
+
+    % perldoc JSON::WebToken
+
+to read the documentation online with your favorite pager.
+
+xaicron
