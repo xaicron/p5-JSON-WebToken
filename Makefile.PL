@@ -13,8 +13,9 @@ requires 'Carp';
 
 recommends 'Crypt::OpenSSL::RSA', '0.28';
 
-test_requires 'Test::More', 0.98;
+test_requires 'Test::More', '0.98';
 test_requires 'Test::Requires', '0.06';
+test_requires 'Test::Mock::Guard', '0.07';
 
 tests join q{ }, map { sprintf 't%s.t', '/*' x $_ } 1..3;
 author_tests 'xt';
