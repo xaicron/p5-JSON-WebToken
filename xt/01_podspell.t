@@ -31,6 +31,7 @@ all_pod_files_spelling_ok('lib');
 
 __DATA__
 JSON::WebToken
+JWT
 
 # personal section
 xaicron

@@ -4,9 +4,17 @@ use Module::Install::AuthorTests;
 name 'JSON-WebToken';
 all_from 'lib/JSON/WebToken.pm';
 
-#requires '';
+requires 'MIME::Base64', '3.13';
+requires 'Exporter', '5.66';
+requires 'Class::Load', '0.19';
+requires 'Digest::SHA', '5.71';
+requires 'JSON::XS';
+requires 'Carp';
+
+recommends 'Crypt::OpenSSL::RSA', '0.28';
 
 test_requires 'Test::More', 0.98;
+test_requires 'Test::Requires', '0.06';
 
 tests join q{ }, map { sprintf 't%s.t', '/*' x $_ } 1..3;
 author_tests 'xt';
