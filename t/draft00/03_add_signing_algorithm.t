@@ -1,8 +1,3 @@
-use strict;
-use warnings;
-use t::Util;
-use Test::More;
-
 package JSON::WebToken::Crypt::__FOO__;
 use Test::More;
 
@@ -30,7 +25,13 @@ sub verify {
 
 package main;
 
-JSON::WebToken->add_signing_algorithm(FOO => '__FOO__');
+use strict;
+use warnings;
+use t::Util;
+use Test::More;
+use JSON::WebToken::Draft00;
+
+JSON::WebToken::Draft00->add_signing_algorithm(FOO => '__FOO__');
 
 test_encode_decode(
     desc  => 'using JSON::WebToken::Crypt::__FOO__',
@@ -41,7 +42,7 @@ test_encode_decode(
     },
 );
 
-JSON::WebToken->add_signing_algorithm(BAR => '+__TEST__::FOO::BAR');
+JSON::WebToken::Draft00->add_signing_algorithm(BAR => '+__TEST__::FOO::BAR');
 
 test_encode_decode(
     desc  => 'using __TEST__::FOO::BAR',

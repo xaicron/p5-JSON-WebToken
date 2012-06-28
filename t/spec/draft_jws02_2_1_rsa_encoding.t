@@ -7,7 +7,7 @@ use Test::Requires qw(
 );
 use Test::Mock::Guard qw(mock_guard);
 use JSON::XS;
-use JSON::WebToken;
+use JSON::WebToken::Draft00;
 
 my $header = pack 'C*' => @{ [123, 34, 97, 108, 103, 34, 58, 34, 82, 83, 50, 53, 54, 34, 125] };
 
@@ -108,7 +108,7 @@ is $rsa->sign($singing_input), $S;
 ok $rsa->verify($singing_input, $S);
 
 my $guard = mock_guard(
-    'JSON::WebToken' => {
+    'JSON::WebToken::Draft00' => {
         encode_json => sub {
             my $array = [$header, $claims];
             sub { shift @$array };
@@ -120,7 +120,7 @@ my $guard = mock_guard(
 );
 
 my $public_key = $rsa->get_public_key_string;
-my $jwt = JSON::WebToken->encode({}, 'dummy', 'RS256');
+my $jwt = JSON::WebToken::Draft00->encode({}, 'dummy', 'RS256');
 is $jwt, join('.',
     (
         'eyJhbGciOiJSUzI1NiJ9'
@@ -139,7 +139,7 @@ is $jwt, join('.',
     ),
 );
 
-my $got = JSON::WebToken->decode($jwt, $public_key);
+my $got = JSON::WebToken::Draft00->decode($jwt, $public_key);
 is_deeply $got, decode_json($claims);
 
 done_testing;

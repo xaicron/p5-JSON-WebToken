@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
-use JSON::WebToken;
+use JSON::WebToken::Draft00;
 
 subtest 'without claims and key' => sub {
     eval { encode_jwt };

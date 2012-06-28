@@ -3,8 +3,9 @@ package t::Util;
 use strict;
 use warnings;
 use Test::More;
-use JSON::WebToken;
 use Exporter 'import';
+
+use JSON::WebToken::Draft00;
 
 our @EXPORT = qw(test_encode_decode);
 
