@@ -177,7 +177,10 @@ This method is encoding JWT from hash reference.
       exp => 1300819380,
       'http://example.com/is_root' => JSON::XS::true,
   }, 'secret');
-  # $jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlLCJpc3MiOiJqb2UifQ.4ldFxjibgJGz_uaIRCIq89b5ipR-sbI2Uq7B2WNEDs0
+  # $jwt = join '.',
+  #     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
+  #     'eyJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlLCJpc3MiOiJqb2UifQ'
+  #     '4ldFxjibgJGz_uaIRCIq89b5ipR-sbI2Uq7B2WNEDs0'
 
 Default encryption algorithm is C<< HS256 >>. You can change algorithm as following:
 
@@ -201,7 +204,10 @@ If you want to create a C<< Plaintext JWT >>, should be specify C<< none >> for 
       exp => 1300819380,
       'http://example.com/is_root' => JSON::XS::true,
   }, '', 'none');
-  # $jwt = eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlLCJpc3MiOiJqb2UifQ.
+  # $jwt = join '.',
+  #     'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0',
+  #     'eyJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlLCJpc3MiOiJqb2UifQ',
+  #     ''
 
 =head2 decode($jwt [, $key, $is_verify ]) : HASH
 
