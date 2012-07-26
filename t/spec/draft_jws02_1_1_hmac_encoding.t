@@ -3,7 +3,7 @@ use warnings;
 use Test::More;
 use Test::Mock::Guard qw(mock_guard);
 use JSON::XS;
-use JSON::WebToken::Draft00;
+use JSON::WebToken;
 
 my $header = pack 'C*' => @{ [
     123, 34, 116, 121, 112, 34, 58, 34, 74,  87,
@@ -27,14 +27,14 @@ my $secret = pack 'C*' => @{ [
     192, 205, 154, 245, 103, 208, 128, 163
 ] };
 
-my $guard = mock_guard('JSON::WebToken::Draft00' => {
+my $guard = mock_guard('JSON::WebToken' => {
     encode_json => sub {
         my $array = [$header, $claims];
         sub { shift @$array };
     }->(),
 });
 
-my $jwt = JSON::WebToken::Draft00->encode({}, $secret);
+my $jwt = JSON::WebToken->encode({}, $secret);
 is $jwt, join('.',
     (
         'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9'
@@ -48,7 +48,7 @@ is $jwt, join('.',
     ),
 );
 
-my $got = JSON::WebToken::Draft00->decode($jwt, $secret);
+my $got = JSON::WebToken->decode($jwt, $secret);
 is_deeply $got, decode_json($claims);
 
 done_testing;

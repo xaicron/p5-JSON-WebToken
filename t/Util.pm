@@ -5,7 +5,7 @@ use warnings;
 use Test::More;
 use Exporter 'import';
 
-use JSON::WebToken::Draft00;
+use JSON::WebToken;
 
 our @EXPORT = qw(test_encode_decode);
 

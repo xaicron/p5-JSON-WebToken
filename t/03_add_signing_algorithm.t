@@ -29,9 +29,9 @@ use strict;
 use warnings;
 use t::Util;
 use Test::More;
-use JSON::WebToken::Draft00;
+use JSON::WebToken;
 
-JSON::WebToken::Draft00->add_signing_algorithm(FOO => '__FOO__');
+JSON::WebToken->add_signing_algorithm(FOO => '__FOO__');
 
 test_encode_decode(
     desc  => 'using JSON::WebToken::Crypt::__FOO__',
@@ -42,7 +42,7 @@ test_encode_decode(
     },
 );
 
-JSON::WebToken::Draft00->add_signing_algorithm(BAR => '+__TEST__::FOO::BAR');
+JSON::WebToken->add_signing_algorithm(BAR => '+__TEST__::FOO::BAR');
 
 test_encode_decode(
     desc  => 'using __TEST__::FOO::BAR',
