@@ -6,9 +6,10 @@ use Carp qw(croak);
 use Crypt::OpenSSL::RSA ();
 
 our $ALGORITHM2SIGNING_METHOD_MAP = {
-    RS256 => 'use_sha256_hash',
-    RS384 => 'use_sha384_hash',
-    RS512 => 'use_sha512_hash',
+    RS256  => 'use_sha256_hash',
+    RS384  => 'use_sha384_hash',
+    RS512  => 'use_sha512_hash',
+    RSA1_5 => 'use_pkcs1_padding',
 };
 
 sub sign {

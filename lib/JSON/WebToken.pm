@@ -15,13 +15,31 @@ use MIME::Base64 qw(encode_base64url decode_base64url);
 
 our @EXPORT = qw(encode_jwt decode_jwt);
 
-our $ALGORITHM2SIGNING_CLASS_MAP = {
+our $ALGORITHM_MAP = {
+    HS256  => 'HMAC',
+    HS384  => 'HMAC',
+    HS512  => 'HMAC',
+    RS256  => 'RSA',
+    RS384  => 'RSA',
+    RS512  => 'RSA',
+    RSA1_5 => 'RSA',
+};
+
+our $ENCRIPTION_ALGORITHM_MAP = {
+    A128CBC => 'AES_CBC',
+    A256CBC => 'AES_CBC',
+};
+
+our $INTEGRITY_ALOGRITHM_MAP = {
     HS256 => 'HMAC',
     HS384 => 'HMAC',
     HS512 => 'HMAC',
-    RS256 => 'RSA',
-    RS384 => 'RSA',
-    RS512 => 'RSA',
+};
+
+our $KEY_DERIVATION_FUNCTION_MAP = {
+    CS256 => '',
+    CS384 => '',
+    CS512 => '',
 };
 
 sub encode {
@@ -97,7 +115,7 @@ sub add_signing_algorithm {
     my ($class, $algorithm, $signing_class) = @_;
     croak 'Usage: JSON::WebToken->add_signing_algorithm($algorithm, $signing_class)'
         unless $algorithm && $signing_class;
-    $ALGORITHM2SIGNING_CLASS_MAP->{$algorithm} = $signing_class;
+    $ALGORITHM_MAP->{$algorithm} = $signing_class;
 }
 
 sub _sign {
@@ -119,7 +137,7 @@ sub _verify {
 my %class_loaded;
 sub _ensure_class_loaded {
     my ($class, $algorithm) = @_;
-    my $klass = $ALGORITHM2SIGNING_CLASS_MAP->{$algorithm};
+    my $klass = $ALGORITHM_MAP->{$algorithm};
     unless ($klass) {
         croak "`$algorithm` is Not supported siging algorithm";
     }
