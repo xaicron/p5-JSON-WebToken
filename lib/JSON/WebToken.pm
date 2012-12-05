@@ -63,7 +63,7 @@ sub decode {
     croak 'key must be specified' if $is_verify && !defined $key;
 
     my $segments = [ split '\.', $jwt ];
-    croak 'Not enough or too many segments' unless @$segments == 3 || @$segments == 2;
+    croak "Not enough or too many segments by $jwt" unless @$segments >= 2 && @$segments <= 4;
 
     my ($header_segment, $claims_segment, $crypto_segment) = @$segments;
     my $signature_input = join '.', $header_segment, $claims_segment;
@@ -82,7 +82,7 @@ sub decode {
 
     my $algorithm = $header->{alg};
     unless ($class->_verify($algorithm, $signature_input, $key, $signature)) {
-        croak 'Invalid signature';
+        croak "Invalid signature by $signature";
     }
 
     return $claims;
