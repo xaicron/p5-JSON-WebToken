@@ -31,7 +31,7 @@ subtest 'without jwt' => sub {
 };
 
 subtest 'too many segments' => sub {
-    eval { decode_jwt 'x.y.z.foo', 'secret' };
+    eval { decode_jwt 'x.y.z.foo.bar', 'secret' };
     like $@, qr/Not enough or too many segments/;
 };
 
