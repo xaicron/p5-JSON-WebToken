@@ -5,18 +5,18 @@ use warnings;
 use Carp qw(croak);
 use Digest::SHA ();
 
+our $ALGORITHM2SIGNING_METHOD_MAP = {
+    HS256 => \&Digest::SHA::hmac_sha256,
+    HS384 => \&Digest::SHA::hmac_sha384,
+    HS512 => \&Digest::SHA::hmac_sha512,
+};
+
 sub sign {
     my ($class, $algorithm, $message, $key) = @_;
 
     my $sign = '';
-    if ($algorithm eq 'HS256') {
-        $sign = Digest::SHA::hmac_sha256($message, $key);
-    }
-    elsif ($algorithm eq 'HS384') {
-        $sign = Digest::SHA::hmac_sha384($message, $key);
-    }
-    elsif ($algorithm eq 'HS512') {
-        $sign = Digest::SHA::hmac_sha512($message, $key);
+    if (my $method = $ALGORITHM2SIGNING_METHOD_MAP->{$algorithm}) {
+        $sign = $method->($message, $key);
     }
     else {
         croak "$algorithm is not supported algorithm";
