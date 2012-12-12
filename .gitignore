@@ -18,3 +18,15 @@ xs/*obj
 *.old
 dll*
 *~
+inc/
+*.sw[po]
+*.bak
+Build
+_build/
+xshelper.h
+tags
+blib/
+META.json
+README
+^inc/
+JSON-WebToken-*/
