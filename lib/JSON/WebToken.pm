@@ -134,9 +134,11 @@ sub _verify {
     $class->_ensure_class_loaded($algorithm)->verify($algorithm, $message, $key, $signature);
 }
 
-my %class_loaded;
+my (%class_loaded, %alg_to_class);
 sub _ensure_class_loaded {
     my ($class, $algorithm) = @_;
+    return $alg_to_class->{$algorithm} if $alg_to_class->{$algorithm};
+
     my $klass = $ALGORITHM_MAP->{$algorithm};
     unless ($klass) {
         croak "`$algorithm` is Not supported siging algorithm";
@@ -146,7 +148,10 @@ sub _ensure_class_loaded {
     return $signing_class if $class_loaded{$signing_class};
 
     Class::Load::load_class($signing_class);
+
     $class_loaded{$signing_class} = 1;
+    $alg_to_class{$algorithm}     = $signing_class;
+
     return $signing_class;
 }
 
@@ -239,7 +244,7 @@ This method is decoding hash reference from JWT string.
 
 =head2 add_signing_algorithm($algorithm, $class)
 
-This method is adding singing algorithm.
+This method is adding signing algorithm.
 
   # resolve JSON::WebToken::Crypt::MYALG
   JSON::WebToken->add_signing_algorithm('MYALGXXX'   => 'MYALG');
