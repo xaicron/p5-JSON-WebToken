@@ -137,7 +137,7 @@ sub _verify {
 my (%class_loaded, %alg_to_class);
 sub _ensure_class_loaded {
     my ($class, $algorithm) = @_;
-    return $alg_to_class->{$algorithm} if $alg_to_class->{$algorithm};
+    return $alg_to_class{$algorithm} if $alg_to_class{$algorithm};
 
     my $klass = $ALGORITHM_MAP->{$algorithm};
     unless ($klass) {
