@@ -18,7 +18,7 @@ my $build = Module::Build->new(
         'Digest::SHA'  => '5.71',
         'Class::Load'  => '0.19',
         'JSON::XS'     => '0',
-        'Exporter'     => '5.66',
+        'Exporter'     => '5.59',
         'Carp'         => '0'
     },
     no_index    => { 'directory' => [ 'inc', 't', 'xt' ] },
