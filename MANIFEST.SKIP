@@ -38,3 +38,4 @@ perltidy.ERR$
 \.bak$
 ^inc/
 ^JSON-WebToken-
+^tmp
