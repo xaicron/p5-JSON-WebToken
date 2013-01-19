@@ -1,5 +1,8 @@
 Revision history for Perl extension JSON::WebToken
 
+0.03  Sat Jan 19 21:50:17 2013
+    - removed draft version
+
 0.02  Sat Jan 19 21:40:56 2013
     - first release
 
