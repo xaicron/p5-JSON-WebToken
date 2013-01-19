@@ -3,14 +3,14 @@ use warnings;
 use Test::More;
 use JSON::WebToken;
 
-subtest 'without claims and key' => sub {
+subtest 'without claims and secret' => sub {
     eval { encode_jwt };
     like $@, qr/Usage: JSON::WebToken->encode/;
 };
 
-subtest 'without key' => sub {
+subtest 'without secret' => sub {
     eval { encode_jwt { foo => 'bar' } };
-    like $@, qr/key must be specified/;
+    like $@, qr/secret must be specified/;
 };
 
 subtest 'claims is not HASH' => sub {
@@ -51,10 +51,10 @@ subtest 'invalid signature' => sub {
     like $@, qr/Invalid signature/;
 };
 
-subtest 'is_verify true, but without key' => sub {
+subtest 'is_verify true, but without secret' => sub {
     my $jwt = encode_jwt { foo => 'bar' }, 'secret';
     eval { decode_jwt $jwt };
-    like $@, qr/key must be specified/;
+    like $@, qr/secret must be specified/;
 };
 
 subtest 'is_verify false' => sub {
