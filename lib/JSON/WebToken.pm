@@ -107,6 +107,10 @@ sub decode {
 
     return $claims unless $is_verify;
 
+    if (ref $secret eq 'CODE') {
+        $secret = $secret->($header, $claims);
+    }
+
     my $algorithm = $header->{alg};
     unless ($class->_verify($algorithm, $signature_input, $secret, $signature)) {
         croak "Invalid signature by $signature";
