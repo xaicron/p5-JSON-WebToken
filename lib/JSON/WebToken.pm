@@ -51,8 +51,8 @@ our $ENCRIPTION_ALGORITHM_MAP = {
 };
 
 sub encode {
-    my ($class, $claims, $key, $algorithm, $extra_headers) = @_;
-    croak 'Usage: JSON::WebToken->encode(\%claims [, $key, $algorithm, \%$extra_headers ])'
+    my ($class, $claims, $secret, $algorithm, $extra_headers) = @_;
+    croak 'Usage: JSON::WebToken->encode(\%claims [, $secret, $algorithm, \%$extra_headers ])'
         unless ref $claims eq 'HASH';
 
     $algorithm     ||= 'HS256';
@@ -66,13 +66,13 @@ sub encode {
     };
 
     $algorithm = $header->{alg};
-    croak 'key must be specified' if $algorithm ne 'none' && !defined $key;
+    croak 'secret must be specified' if $algorithm ne 'none' && !defined $secret;
 
     my $header_segment  = encode_base64url encode_json $header;
     my $claims_segment  = encode_base64url encode_json $claims;
     my $signature_input = join '.', $header_segment, $claims_segment;
 
-    my $signature = $class->_sign($algorithm, $signature_input, $key);
+    my $signature = $class->_sign($algorithm, $signature_input, $secret);
 
     return join '.', $signature_input, encode_base64url $signature;
 }
@@ -83,11 +83,11 @@ sub encode_jwt {
 }
 
 sub decode {
-    my ($class, $jwt, $key, $is_verify) = @_;
-    croak 'Usage: JSON::WebToken->decode($jwt [, $key, $is_verify ])' unless $jwt;
+    my ($class, $jwt, $secret, $is_verify) = @_;
+    croak 'Usage: JSON::WebToken->decode($jwt [, $secret, $is_verify ])' unless $jwt;
 
     $is_verify = 1 unless defined $is_verify;
-    croak 'key must be specified' if $is_verify && !defined $key;
+    croak 'secret must be specified' if $is_verify && !defined $secret;
 
     my $segments = [ split '\.', $jwt ];
     croak "Not enough or too many segments by $jwt" unless @$segments >= 2 && @$segments <= 4;
@@ -108,7 +108,7 @@ sub decode {
     return $claims unless $is_verify;
 
     my $algorithm = $header->{alg};
-    unless ($class->_verify($algorithm, $signature_input, $key, $signature)) {
+    unless ($class->_verify($algorithm, $signature_input, $secret, $signature)) {
         croak "Invalid signature by $signature";
     }
 
@@ -128,19 +128,19 @@ sub add_signing_algorithm {
 }
 
 sub _sign {
-    my ($class, $algorithm, $message, $key) = @_;
+    my ($class, $algorithm, $message, $secret) = @_;
     return '' if $algorithm eq 'none';
 
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-    $class->_ensure_class_loaded($algorithm)->sign($algorithm, $message, $key);
+    $class->_ensure_class_loaded($algorithm)->sign($algorithm, $message, $secret);
 }
 
 sub _verify {
-    my ($class, $algorithm, $message, $key, $signature) = @_;
+    my ($class, $algorithm, $message, $secret, $signature) = @_;
     return 1 if $algorithm eq 'none';
 
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-    $class->_ensure_class_loaded($algorithm)->verify($algorithm, $message, $key, $signature);
+    $class->_ensure_class_loaded($algorithm)->verify($algorithm, $message, $secret, $signature);
 }
 
 my (%class_loaded, %alg_to_class);
@@ -186,10 +186,10 @@ JSON::WebToken - JSON Web Token (JWT) implementation (draft version 00)
       exp => 1300819380,
       'http://example.com/is_root' => JSON::XS::true,
   };
-  my $key = 'secret';
+  my $secret = 'secret';
 
-  my $jwt = encode_jwt $claims, $key;
-  my $got = decode_jwt $jwt, $key;
+  my $jwt = encode_jwt $claims, $secret;
+  my $got = decode_jwt $jwt, $secret;
   is_deeply $got, $claims;
 
   done_testing;
@@ -204,7 +204,7 @@ B<< THIS MODULE IS ALPHA LEVEL INTERFACE. >>
 
 =head1 METHODS
 
-=head2 encode($claims [, $key, $algorithm, $extra_headers ]) : String
+=head2 encode($claims [, $secret, $algorithm, $extra_headers ]) : String
 
 This method is encoding JWT from hash reference.
 
@@ -245,11 +245,11 @@ If you want to create a C<< Plaintext JWT >>, should be specify C<< none >> for 
   #     'eyJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlLCJpc3MiOiJqb2UifQ',
   #     ''
 
-=head2 decode($jwt [, $key, $is_verify ]) : HASH
+=head2 decode($jwt [, $secret, $is_verify ]) : HASH
 
 This method is decoding hash reference from JWT string.
 
-  my $claims = JSON::WebToken->decode($jwt, $key);
+  my $claims = JSON::WebToken->decode($jwt, $secret);
 
 =head2 add_signing_algorithm($algorithm, $class)
 
@@ -265,11 +265,11 @@ SEE ALSO L<< JSON::WebToken::Crypt::HMAC >> or L<< JSON::WebToken::Crypt::RAS >>
 
 =head1 FUNCTIONS
 
-=head2 encode_jwt($claims [, $key, $algorithm, $extra_headers ]) : String
+=head2 encode_jwt($claims [, $secret, $algorithm, $extra_headers ]) : String
 
 Same as C<< encode() >> method.
 
-=head2 decode_jwt($jwt [, $key, $is_verify ]) : Hash
+=head2 decode_jwt($jwt [, $secret, $is_verify ]) : Hash
 
 Same as C<< decode() >> method.
 
