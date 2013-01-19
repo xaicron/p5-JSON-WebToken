@@ -35,20 +35,16 @@ my $guard = mock_guard('JSON::WebToken' => {
 });
 
 my $jwt = JSON::WebToken->encode({}, $secret);
-is $jwt, join('.',
-    (
-        'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9'
-    ),
-    (
-        'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFt'.
-        'cGxlLmNvbS9pc19yb290Ijp0cnVlfQ'
-    ),
-    (
-        'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk'
-    ),
-);
+is $jwt, join q{}, qw{
+    eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9
+    .
+    eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFt
+    cGxlLmNvbS9pc19yb290Ijp0cnVlfQ
+    .
+    dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+};
 
-my $got = JSON::WebToken->decode($jwt, $secret);
-is_deeply $got, decode_json($claims);
+my $data = JSON::WebToken->decode($jwt, $secret);
+is_deeply $data, decode_json($claims);
 
 done_testing;
