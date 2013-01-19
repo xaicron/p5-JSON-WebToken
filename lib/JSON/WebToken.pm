@@ -51,17 +51,18 @@ our $ENCRIPTION_ALGORITHM_MAP = {
 };
 
 sub encode {
-    my ($class, $claims, $key, $algorithm, $header_fields) = @_;
-    croak 'Usage: JSON::WebToken->encode(\%claims [, $key, $algorithm, \%$header_fields ])'
+    my ($class, $claims, $key, $algorithm, $extra_headers) = @_;
+    croak 'Usage: JSON::WebToken->encode(\%claims [, $key, $algorithm, \%$extra_headers ])'
         unless ref $claims eq 'HASH';
 
     $algorithm     ||= 'HS256';
-    $header_fields ||= {};
+    $extra_headers ||= {};
 
     my $header = {
-        typ => 'JWT',
+#        typ parameter is OPTIONAL ("JWT" or "urn:ietf:params:oauth:token-type:jwt")
+#        typ => 'JWT',
         alg => $algorithm,
-        %$header_fields,
+        %$extra_headers,
     };
 
     $algorithm = $header->{alg};
@@ -203,7 +204,7 @@ B<< THIS MODULE IS ALPHA LEVEL INTERFACE. >>
 
 =head1 METHODS
 
-=head2 encode($claims [, $key, $algorithm, $header_fields ]) : String
+=head2 encode($claims [, $key, $algorithm, $extra_headers ]) : String
 
 This method is encoding JWT from hash reference.
 
@@ -264,7 +265,7 @@ SEE ALSO L<< JSON::WebToken::Crypt::HMAC >> or L<< JSON::WebToken::Crypt::RAS >>
 
 =head1 FUNCTIONS
 
-=head2 encode_jwt($claims [, $key, $algorithm, $header_fields ]) : String
+=head2 encode_jwt($claims [, $key, $algorithm, $extra_headers ]) : String
 
 Same as C<< encode() >> method.
 
