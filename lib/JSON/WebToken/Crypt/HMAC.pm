@@ -2,7 +2,8 @@ package JSON::WebToken::Crypt::HMAC;
 
 use strict;
 use warnings;
-use Carp qw(croak);
+use parent 'JSON::WebToken::Crypt';
+
 use Digest::SHA ();
 
 our $ALGORITHM2SIGNING_METHOD_MAP = {
@@ -15,14 +16,8 @@ sub sign {
     my ($class, $algorithm, $message, $key) = @_;
 
     my $sign = '';
-    if (my $method = $ALGORITHM2SIGNING_METHOD_MAP->{$algorithm}) {
-        $sign = $method->($message, $key);
-    }
-    else {
-        croak "$algorithm is not supported algorithm";
-    }
-
-    return $sign;
+    my $method = $ALGORITHM2SIGNING_METHOD_MAP->{$algorithm};
+    return $method->($message, $key);
 }
 
 sub verify {

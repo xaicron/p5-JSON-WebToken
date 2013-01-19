@@ -2,7 +2,8 @@ package JSON::WebToken::Crypt::RSA;
 
 use strict;
 use warnings;
-use Carp qw(croak);
+use parent 'JSON::WebToken::Crypt';
+
 use Crypt::OpenSSL::RSA ();
 
 our $ALGORITHM2SIGNING_METHOD_MAP = {

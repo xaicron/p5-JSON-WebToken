@@ -23,32 +23,32 @@ our $ALGORITHM_MAP = {
     RS256  => 'RSA',
     RS384  => 'RSA',
     RS512  => 'RSA',
-    ES256  => 'EC',
-    ES384  => 'EC',
-    ES512  => 'EC',
+#    ES256  => 'EC',
+#    ES384  => 'EC',
+#    ES512  => 'EC',
     none   => 'NONE',
 
     # for JWE
     RSA1_5           => 'RSA',
-    'RSA-OAEP'       => 'OAEP',
-    A128KW           => '',
-    A256KW           => '',
+#    'RSA-OAEP'       => 'OAEP',
+#    A128KW           => '',
+#    A256KW           => '',
     dir              => 'NONE',
-    'ECDH-ES'        => '',
-    'ECDH-ES+A128KW' => '',
-    'ECDH-ES+A256KW' => '',
+#    'ECDH-ES'        => '',
+#    'ECDH-ES+A128KW' => '',
+#    'ECDH-ES+A256KW' => '',
 
     # for JWK
-    EC  => 'EC',
+#    EC  => 'EC',
     RSA => 'RSA',
 };
 
-our $ENCRIPTION_ALGORITHM_MAP = {
-    'A128CBC+HS256' => 'AES_CBC',
-    'A256CBC+HS512' => 'AES_CBC',
-    A128GCM         => '',
-    A256GCM         => '',
-};
+#our $ENCRIPTION_ALGORITHM_MAP = {
+#    'A128CBC+HS256' => 'AES_CBC',
+#    'A256CBC+HS512' => 'AES_CBC',
+#    A128GCM         => '',
+#    A256GCM         => '',
+#};
 
 sub encode {
     my ($class, $claims, $secret, $algorithm, $extra_headers) = @_;
