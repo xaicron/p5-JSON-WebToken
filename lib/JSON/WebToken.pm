@@ -16,30 +16,38 @@ use MIME::Base64 qw(encode_base64url decode_base64url);
 our @EXPORT = qw(encode_jwt decode_jwt);
 
 our $ALGORITHM_MAP = {
+    # for JWS
     HS256  => 'HMAC',
     HS384  => 'HMAC',
     HS512  => 'HMAC',
     RS256  => 'RSA',
     RS384  => 'RSA',
     RS512  => 'RSA',
-    RSA1_5 => 'RSA',
+    ES256  => 'EC',
+    ES384  => 'EC',
+    ES512  => 'EC',
+    none   => 'NONE',
+
+    # for JWE
+    RSA1_5           => 'RSA',
+    'RSA-OAEP'       => 'OAEP',
+    A128KW           => '',
+    A256KW           => '',
+    dir              => 'NONE',
+    'ECDH-ES'        => '',
+    'ECDH-ES+A128KW' => '',
+    'ECDH-ES+A256KW' => '',
+
+    # for JWK
+    EC  => 'EC',
+    RSA => 'RSA',
 };
 
 our $ENCRIPTION_ALGORITHM_MAP = {
-    A128CBC => 'AES_CBC',
-    A256CBC => 'AES_CBC',
-};
-
-our $INTEGRITY_ALOGRITHM_MAP = {
-    HS256 => 'HMAC',
-    HS384 => 'HMAC',
-    HS512 => 'HMAC',
-};
-
-our $KEY_DERIVATION_FUNCTION_MAP = {
-    CS256 => '',
-    CS384 => '',
-    CS512 => '',
+    'A128CBC+HS256' => 'AES_CBC',
+    'A256CBC+HS512' => 'AES_CBC',
+    A128GCM         => '',
+    A256GCM         => '',
 };
 
 sub encode {
