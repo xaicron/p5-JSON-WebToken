@@ -177,7 +177,7 @@ __END__
 
 =head1 NAME
 
-JSON::WebToken - JSON Web Token (JWT) implementation (draft version 00)
+JSON::WebToken - JSON Web Token (JWT) implementation
 
 =head1 SYNOPSIS
 
