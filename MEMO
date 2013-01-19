@@ -1,0 +1,114 @@
+1. JWE Header
+2. JWE Encrypted Key
+3. JWE Ciphertext
+4. JWE Integrity Value
+
+3.  Cryptographic Algorithms for JWS
+3.1.  "alg" (Algorithm) Header Parameter Values for JWS
+
+   +--------------+--------------------------------+-------------------+
+   | alg          | Digital Signature or MAC       | Implementation    |
+   | Parameter    | Algorithm                      | Requirements      |
+   | Value        |                                |                   |
+   +--------------+--------------------------------+-------------------+
+   | HS256        | HMAC using SHA-256 hash        | REQUIRED          | Digest::SHA (hmac_sha256)
+   |              | algorithm                      |                   |
+   | HS384        | HMAC using SHA-384 hash        | OPTIONAL          | Digest::SHA (hmac_sha384)
+   |              | algorithm                      |                   |
+   | HS512        | HMAC using SHA-512 hash        | OPTIONAL          | Digest::SHA (hmac_sha512)
+   |              | algorithm                      |                   |
+   | RS256        | RSASSA using SHA-256 hash      | RECOMMENDED       | Crypt::OpenSSL::RSA (use_sha256_hash)
+   |              | algorithm                      |                   |
+   | RS384        | RSASSA using SHA-384 hash      | OPTIONAL          | Crypt::OpenSSL::RSA (use_sha384_hash)
+   |              | algorithm                      |                   |
+   | RS512        | RSASSA using SHA-512 hash      | OPTIONAL          | Crypt::OpenSSL::RSA (use_sha512_hash)
+   |              | algorithm                      |                   |
+   | ES256        | ECDSA using P-256 curve and    | RECOMMENDED+      | Crypt::OpenSSL::EC
+   |              | SHA-256 hash algorithm         |                   |
+   | ES384        | ECDSA using P-384 curve and    | OPTIONAL          | Crypt::OpenSSL::EC
+   |              | SHA-384 hash algorithm         |                   |
+   | ES512        | ECDSA using P-521 curve and    | OPTIONAL          | Crypt::OpenSSL::EC
+   |              | SHA-512 hash algorithm         |                   |
+   | none         | No digital signature or MAC    | REQUIRED          |
+   |              | value included                 |                   |
+   +--------------+--------------------------------+-------------------+
+
+4.  Cryptographic Algorithms for JWE
+4.1.  "alg" (Algorithm) Header Parameter Values for JWE
+
+   +-----------+--------------------------------------+----------------+
+   | alg       | Key Encryption or Agreement          | Implementation |
+   | Parameter | Algorithm                            | Requirements   |
+   | Value     |                                      |                |
+   +-----------+--------------------------------------+----------------+
+   | RSA1_5    | RSAES-PKCS1-V1_5 [RFC3447]           | REQUIRED       | Crypt::OpenSSL::RSA (use_pkcs1_padding)
+   | RSA-OAEP  | RSAES using Optimal Asymmetric       | OPTIONAL       | Crypt::RSA::ES::OAEP ?
+   |           | Encryption Padding (OAEP) [RFC3447], |                |
+   |           | with the default parameters          |                |
+   |           | specified by RFC 3447 in Section     |                |
+   |           | A.2.1                                |                |
+   | ECDH-ES   | Elliptic Curve Diffie-Hellman        | RECOMMENDED+   | ?
+   |           | Ephemeral Static [RFC6090], and      |                |
+   |           | using the Concat KDF, as defined in  |                |
+   |           | Section 5.8.1 of [NIST.800-56A],     |                |
+   |           | where the Digest Method is SHA-256   |                |
+   |           | and all OtherInfo parameters are the |                |
+   |           | empty bit string                     |                |
+   | A128KW    | Advanced Encryption Standard (AES)   | RECOMMENDED    | ?
+   |           | Key Wrap Algorithm [RFC3394] using   |                |
+   |           | 128 bit keys                         |                |
+   | A256KW    | AES Key Wrap Algorithm using 256 bit | RECOMMENDED    | ?
+   |           | keys                                 |                |
+   +-----------+--------------------------------------+----------------+
+
+4.2.  "enc" (Encryption Method) Header Parameter Values for JWE
+
+   +-----------+--------------------------------------+----------------+
+   | enc       | Block Encryption Algorithm           | Implementation |
+   | Parameter |                                      | Requirements   |
+   | Value     |                                      |                |
+   +-----------+--------------------------------------+----------------+
+   | A128CBC   | Advanced Encryption Standard (AES)   | REQUIRED       | Crypt::OpenSSL::AES with Crypt::CBC
+   |           | in Cipher Block Chaining (CBC) mode  |                |
+   |           | with PKCS #5 padding [AES]           |                |
+   |           | [NIST.800-38A] using 128 bit keys    |                |
+   | A256CBC   | AES in CBC mode with PKCS #5 padding | REQUIRED       | Crypt::OpenSSL::AES with Crypt::CBC
+   |           | using 256 bit keys                   |                |
+   | A128GCM   | AES in Galois/Counter Mode (GCM)     | RECOMMENDED    | Crypt::GCM
+   |           | [AES] [NIST.800-38D] using 128 bit   |                |
+   |           | keys                                 |                |
+   | A256GCM   | AES GCM using 256 bit keys           | RECOMMENDED    | Crypt::GCM
+   +-----------+--------------------------------------+----------------+
+
+5.  Cryptographic Algorithms for JWK
+5.1.  "alg" (Algorithm Family) Parameter Values for JWK
+
+   +-----------------+-------------------------+-----------------------+
+   | alg Parameter   | Algorithm Family        | Implementation        |
+   | Value           |                         | Requirements          |
+   +-----------------+-------------------------+-----------------------+
+   | EC              | Elliptic Curve [DSS]    | RECOMMENDED+          |
+   |                 | key family              |                       |
+   | RSA             | RSA [RFC3447] key       | REQUIRED              |
+   |                 | family                  |                       |
+   +-----------------+-------------------------+-----------------------+
+
+5.2.  JWK Parameters for Elliptic Curve Keys
+5.2.1.  "crv" (Curve) Parameter
+
+   o  "P-256"
+
+   o  "P-384"
+
+   o  "P-521"
+
+5.2.2.  "x" (X Coordinate) Parameter
+
+5.2.3.  "y" (Y Coordinate) Parameter
+
+5.3.  JWK Parameters for RSA Keys
+
+5.3.1.  "mod" (Modulus) Parameter
+
+5.3.2.  "exp" (Exponent) Parameter
+
