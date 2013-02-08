@@ -112,6 +112,9 @@ sub decode {
     }
 
     my $algorithm = $header->{alg};
+    croak "Signature must be the empty string when alg is none"
+        if $algorithm eq 'none' and $crypto_segment;
+
     unless ($class->_verify($algorithm, $signature_input, $secret, $signature)) {
         croak "Invalid signature by $signature";
     }

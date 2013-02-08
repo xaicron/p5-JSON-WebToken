@@ -51,6 +51,12 @@ subtest 'invalid signature' => sub {
     like $@, qr/Invalid signature/;
 };
 
+subtest 'signature must be empty' => sub {
+    my $jwt = encode_jwt { foo => 'bar' }, '', 'none';
+    eval { decode_jwt "$jwt"."xxx", 'foo' };
+    like $@, qr/Signature must be the empty string when alg is none/;
+};
+
 subtest 'is_verify true, but without secret' => sub {
     my $jwt = encode_jwt { foo => 'bar' }, 'secret';
     eval { decode_jwt $jwt };
