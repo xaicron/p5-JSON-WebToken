@@ -1,5 +1,8 @@
 Revision history for Perl extension JSON::WebToken
 
+0.05  Sun Feb 10 01:32:14 2013
+    - added signature check in case of alg is none (ritou++)
+
 0.04  Sat Jan 19 21:54:05 2013
     - added SEE ALSO
 
