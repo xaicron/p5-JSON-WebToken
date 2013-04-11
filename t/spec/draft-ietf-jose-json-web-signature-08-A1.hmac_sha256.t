@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More;
 use Test::Mock::Guard qw(mock_guard);
-use JSON::XS;
+use JSON;
 use JSON::WebToken;
 
 my $header = pack 'C*' => @{ [

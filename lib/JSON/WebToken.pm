@@ -6,12 +6,12 @@ use 5.008_001;
 
 our $VERSION = '0.05';
 
-use Exporter 'import';
+use parent 'Exporter';
 
 use Carp qw(croak);
-use Class::Load ();
-use JSON::XS qw(encode_json decode_json);
+use JSON qw(encode_json decode_json);
 use MIME::Base64 qw(encode_base64url decode_base64url);
+use Module::Runtime qw(use_module);
 
 our @EXPORT = qw(encode_jwt decode_jwt);
 
@@ -163,12 +163,18 @@ sub _ensure_class_loaded {
     my $signing_class = $klass =~ s/^\+// ? $klass : "JSON::WebToken::Crypt::$klass";
     return $signing_class if $class_loaded{$signing_class};
 
-    Class::Load::load_class($signing_class);
+    use_module $signing_class unless $class->_is_inner_package($signing_class);
 
     $class_loaded{$signing_class} = 1;
     $alg_to_class{$algorithm}     = $signing_class;
 
     return $signing_class;
+}
+
+sub _is_inner_package {
+    my ($class, $klass) = @_;
+    no strict 'refs';
+    %{ "$klass\::" } ? 1 : 0;
 }
 
 1;
@@ -185,13 +191,13 @@ JSON::WebToken - JSON Web Token (JWT) implementation
 =head1 SYNOPSIS
 
   use Test::More;
-  use JSON::XS;
+  use JSON;
   use JSON::WebToken;
 
   my $claims = {
       iss => 'joe',
       exp => 1300819380,
-      'http://example.com/is_root' => JSON::XS::true,
+      'http://example.com/is_root' => JSON::true,
   };
   my $secret = 'secret';
 
@@ -216,7 +222,7 @@ This method is encoding JWT from hash reference.
   my $jwt = JSON::WebToken->encode({
       iss => 'joe',
       exp => 1300819380,
-      'http://example.com/is_root' => JSON::XS::true,
+      'http://example.com/is_root' => JSON::true,
   }, 'secret');
   # $jwt = join '.',
   #     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
@@ -231,7 +237,7 @@ Default encryption algorithm is C<< HS256 >>. You can change algorithm as follow
   my $jwt = JSON::WebToken->encode({
       iss => 'joe',
       exp => 1300819380,
-      'http://example.com/is_root' => JSON::XS::true,
+      'http://example.com/is_root' => JSON::true,
   }, $pricate_key_string, 'RS256');
 
   my $claims = JSON::WebToken->decode($jwt, $public_key_string);
@@ -243,7 +249,7 @@ If you want to create a C<< Plaintext JWT >>, should be specify C<< none >> for 
   my $jwt = JSON::WebToken->encode({
       iss => 'joe',
       exp => 1300819380,
-      'http://example.com/is_root' => JSON::XS::true,
+      'http://example.com/is_root' => JSON::true,
   }, '', 'none');
   # $jwt = join '.',
   #     'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0',

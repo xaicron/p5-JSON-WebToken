@@ -5,13 +5,13 @@ JSON::WebToken - JSON Web Token (JWT) implementation
 # SYNOPSIS
 
     use Test::More;
-    use JSON::XS;
+    use JSON;
     use JSON::WebToken;
 
     my $claims = {
         iss => 'joe',
         exp => 1300819380,
-        'http://example.com/is_root' => JSON::XS::true,
+        'http://example.com/is_root' => JSON::true,
     };
     my $secret = 'secret';
 
@@ -36,7 +36,7 @@ This method is encoding JWT from hash reference.
     my $jwt = JSON::WebToken->encode({
         iss => 'joe',
         exp => 1300819380,
-        'http://example.com/is_root' => JSON::XS::true,
+        'http://example.com/is_root' => JSON::true,
     }, 'secret');
     # $jwt = join '.',
     #     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
@@ -51,7 +51,7 @@ Default encryption algorithm is `HS256`. You can change algorithm as following:
     my $jwt = JSON::WebToken->encode({
         iss => 'joe',
         exp => 1300819380,
-        'http://example.com/is_root' => JSON::XS::true,
+        'http://example.com/is_root' => JSON::true,
     }, $pricate_key_string, 'RS256');
 
     my $claims = JSON::WebToken->decode($jwt, $public_key_string);
@@ -63,7 +63,7 @@ If you want to create a `Plaintext JWT`, should be specify `none` for the algori
     my $jwt = JSON::WebToken->encode({
         iss => 'joe',
         exp => 1300819380,
-        'http://example.com/is_root' => JSON::XS::true,
+        'http://example.com/is_root' => JSON::true,
     }, '', 'none');
     # $jwt = join '.',
     #     'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0',

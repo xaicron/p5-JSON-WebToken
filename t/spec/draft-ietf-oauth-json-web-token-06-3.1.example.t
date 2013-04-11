@@ -4,7 +4,7 @@ use t::Util;
 use Test::More;
 use Test::Mock::Guard qw(mock_guard);
 
-use JSON::XS;
+use JSON;
 
 my $expects = join q{}, qw{
     eyJhbGciOiJub25lIn0

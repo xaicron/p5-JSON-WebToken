@@ -6,7 +6,7 @@ use Test::Requires qw(
     Crypt::OpenSSL::Bignum
 );
 use Test::Mock::Guard qw(mock_guard);
-use JSON::XS;
+use JSON;
 use JSON::WebToken;
 
 my $header = pack 'C*' => @{ [123, 34, 97, 108, 103, 34, 58, 34, 82, 83, 50, 53, 54, 34, 125] };
