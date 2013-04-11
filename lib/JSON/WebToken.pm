@@ -10,7 +10,7 @@ use parent 'Exporter';
 
 use Carp qw(croak);
 use JSON qw(encode_json decode_json);
-use MIME::Base64 qw(encode_base64url decode_base64url);
+use MIME::Base64 qw(encode_base64 decode_base64);
 use Module::Runtime qw(use_module);
 
 our @EXPORT = qw(encode_jwt decode_jwt);
@@ -68,13 +68,13 @@ sub encode {
     $algorithm = $header->{alg};
     croak 'secret must be specified' if $algorithm ne 'none' && !defined $secret;
 
-    my $header_segment  = encode_base64url encode_json $header;
-    my $claims_segment  = encode_base64url encode_json $claims;
+    my $header_segment  = encode_base64url(encode_json $header);
+    my $claims_segment  = encode_base64url(encode_json $claims);
     my $signature_input = join '.', $header_segment, $claims_segment;
 
     my $signature = $class->_sign($algorithm, $signature_input, $secret);
 
-    return join '.', $signature_input, encode_base64url $signature;
+    return join '.', $signature_input, encode_base64url($signature);
 }
 
 sub encode_jwt {
@@ -97,9 +97,9 @@ sub decode {
 
     my ($header, $claims, $signature);
     eval {
-        $header    = decode_json decode_base64url $header_segment;
-        $claims    = decode_json decode_base64url $claims_segment;
-        $signature = decode_base64url $crypto_segment if $header->{alg} ne 'none' && $is_verify;
+        $header    = decode_json decode_base64url($header_segment);
+        $claims    = decode_json decode_base64url($claims_segment);
+        $signature = decode_base64url($crypto_segment) if $header->{alg} ne 'none' && $is_verify;
     };
     if (my $e = $@) {
         croak 'Invalid segment encoding';
@@ -175,6 +175,24 @@ sub _is_inner_package {
     my ($class, $klass) = @_;
     no strict 'refs';
     %{ "$klass\::" } ? 1 : 0;
+}
+
+####################################################
+# Taken from newer MIME::Base64
+# In order to support older version of MIME::Base64
+####################################################
+sub encode_base64url {
+    my $e = encode_base64(shift, "");
+    $e =~ s/=+\z//;
+    $e =~ tr[+/][-_];
+    return $e;
+}
+
+sub decode_base64url {
+    my $s = shift;
+    $s =~ tr[-_][+/];
+    $s .= '=' while length($s) % 4;
+    return decode_base64($s);
 }
 
 1;

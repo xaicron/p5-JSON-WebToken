@@ -4,7 +4,7 @@ requires 'Module::Runtime';
 requires 'Digest::SHA';
 requires 'Exporter';
 requires 'JSON';
-requires 'MIME::Base64', '3.13';
+requires 'MIME::Base64';
 requires 'perl', '5.008001';
 
 on test => sub {
