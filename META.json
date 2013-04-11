@@ -1,0 +1,80 @@
+{
+   "abstract" : "JSON Web Token (JWT) implementation",
+   "author" : [
+      "xaicron <xaicron@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Minilla/v0.0.52, CPAN::Meta::Converter version 2.130870",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "JSON-WebToken",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Test::Mock::Guard" : "0.07",
+            "Test::More" : "0.98",
+            "Test::Requires" : "0.06"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "CPAN::Meta" : "0",
+            "CPAN::Meta::Prereqs" : "0",
+            "Module::Build" : "0.38"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Pod::Wordlist::hanekomu" : "0",
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion" : "0.10108",
+            "Test::Pod" : "1.41",
+            "Test::Spelling" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Carp" : "0",
+            "Class::Load" : "0.19",
+            "Digest::SHA" : "5.71",
+            "Exporter" : "5.59",
+            "JSON::XS" : "0",
+            "MIME::Base64" : "3.13",
+            "perl" : "5.008001"
+         }
+      }
+   },
+   "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/xaicron/p5-JSON-WebToken/issues"
+      },
+      "homepage" : "https://github.com/xaicron/p5-JSON-WebToken",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/xaicron/p5-JSON-WebToken.git",
+         "web" : "https://github.com/xaicron/p5-JSON-WebToken"
+      }
+   },
+   "version" : "0.05",
+   "x_contributors" : [
+      "Masaki Sawamura <sawamura.masaki@dena.jp>",
+      "Ryo <ritou.06@gmail.com>",
+      "xaicron <xaicron@gmail.com>"
+   ]
+}

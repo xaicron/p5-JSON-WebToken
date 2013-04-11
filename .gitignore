@@ -26,7 +26,12 @@ _build/
 xshelper.h
 tags
 blib/
-META.json
 README
 ^inc/
 JSON-WebToken-*/
+/JSON-WebToken-*
+/.build
+/_build_params
+/Build
+!Build/
+!META.json
