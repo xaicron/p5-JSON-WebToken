@@ -24,13 +24,6 @@
       ]
    },
    "prereqs" : {
-      "build" : {
-         "requires" : {
-            "Test::Mock::Guard" : "0.07",
-            "Test::More" : "0.98",
-            "Test::Requires" : "0.06"
-         }
-      },
       "configure" : {
          "requires" : {
             "CPAN::Meta" : "0",
@@ -53,10 +46,17 @@
             "Digest::SHA" : "0",
             "Exporter" : "0",
             "JSON" : "0",
-            "MIME::Base64" : "3.13",
+            "MIME::Base64" : "0",
             "Module::Runtime" : "0",
             "parent" : "0",
             "perl" : "5.008001"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::Mock::Guard" : "0.07",
+            "Test::More" : "0.98",
+            "Test::Requires" : "0.06"
          }
       }
    },
