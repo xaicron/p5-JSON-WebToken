@@ -7,6 +7,8 @@ requires 'JSON';
 requires 'MIME::Base64';
 requires 'perl', '5.008001';
 
+recommends 'JSON::XS';
+
 on test => sub {
     requires 'Test::Mock::Guard', '0.07';
     requires 'Test::More', '0.98';
