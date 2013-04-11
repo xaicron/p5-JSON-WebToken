@@ -9,11 +9,18 @@ our $VERSION = '0.06';
 use parent 'Exporter';
 
 use Carp qw(croak);
-use JSON qw(encode_json decode_json);
 use MIME::Base64 qw(encode_base64 decode_base64);
 use Module::Runtime qw(use_module);
 
 our @EXPORT = qw(encode_jwt decode_jwt);
+
+BEGIN {
+    my $JSON_MODULE = 'JSON';
+    if ( eval 'require JSON::XS' ) { ## no critic
+        $JSON_MODULE = 'JSON::XS';
+    }
+    import $JSON_MODULE qw(encode_json decode_json);
+}
 
 our $ALGORITHM_MAP = {
     # for JWS
