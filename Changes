@@ -2,6 +2,9 @@ Revision history for Perl extension JSON::WebToken
 
 {{$NEXT}}
 
+0.07 2013-04-19T17:48:46Z
+    - repackaging
+
 0.06 2013-04-11T09:51:23Z
     - reduced the dependence (suggested by maedama, bayashi)
 
