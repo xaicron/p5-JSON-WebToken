@@ -56,7 +56,7 @@ Default encryption algorithm is `HS256`. You can change algorithm as following:
 
     my $claims = JSON::WebToken->decode($jwt, $public_key_string);
 
-When you use RS256, RS384 or RS512 algorithm then, We need [Crypt::OpenSSL::RSA](http://search.cpan.org/perldoc?Crypt::OpenSSL::RSA).
+When you use RS256, RS384 or RS512 algorithm then, We need [Crypt::OpenSSL::RSA](https://metacpan.org/pod/Crypt::OpenSSL::RSA).
 
 If you want to create a `Plaintext JWT`, should be specify `none` for the algorithm.
 
@@ -86,7 +86,7 @@ This method is adding signing algorithm.
     # resolve Some::Class::Algorithm
     JSON::WebToken->add_signing_algorithm('SOMEALGXXX' => '+Some::Class::Algorithm');
 
-SEE ALSO [JSON::WebToken::Crypt::HMAC](http://search.cpan.org/perldoc?JSON::WebToken::Crypt::HMAC) or [JSON::WebToken::Crypt::RAS](http://search.cpan.org/perldoc?JSON::WebToken::Crypt::RAS).
+SEE ALSO [JSON::WebToken::Crypt::HMAC](https://metacpan.org/pod/JSON::WebToken::Crypt::HMAC) or [JSON::WebToken::Crypt::RAS](https://metacpan.org/pod/JSON::WebToken::Crypt::RAS).
 
 # FUNCTIONS
 
@@ -98,9 +98,43 @@ Same as `encode()` method.
 
 Same as `decode()` method.
 
+# ERROR CODES
+
+JSON::WebToken::Exception will be thrown with following code.
+
+## ERROR\_JWT\_INVALID\_PARAMETER
+
+When some method arguments are not valid.
+
+## ERROR\_JWT\_MISSING\_SECRET
+
+When secret is required. (`alg != "none"`)
+
+## ERROR\_JWT\_INVALID\_SEGMENT\_COUNT
+
+When JWT segment count is not between 2 and 4.
+
+## ERROR\_JWT\_INVALID\_SEGMENT\_ENCODING
+
+When each JWT segment is not encoded by base64url.
+
+## ERROR\_JWT\_UNWANTED\_SIGNATURE
+
+When `alg == "none"` but signature segment found.
+
+## ERROR\_JWT\_INVALID\_SIGNATURE
+
+When JWT signature is invalid.
+
+## ERROR\_JWT\_NOT\_SUPPORTED\_SIGNING\_ALGORITHM
+
+When given signing algorithm is not supported.
+
 # AUTHOR
 
 xaicron <xaicron@cpan.org>
+
+zentooo
 
 # COPYRIGHT
 
