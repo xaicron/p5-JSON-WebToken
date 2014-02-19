@@ -13,6 +13,9 @@ use JSON qw(encode_json decode_json);
 use MIME::Base64 qw(encode_base64 decode_base64);
 use Module::Runtime qw(use_module);
 
+use JSON::WebToken::Constants;
+use JSON::WebToken::Exception;
+
 our @EXPORT = qw(encode_jwt decode_jwt);
 
 our $ALGORITHM_MAP = {
@@ -52,8 +55,12 @@ our $ALGORITHM_MAP = {
 
 sub encode {
     my ($class, $claims, $secret, $algorithm, $extra_headers) = @_;
-    croak 'Usage: JSON::WebToken->encode(\%claims [, $secret, $algorithm, \%$extra_headers ])'
-        unless ref $claims eq 'HASH';
+    unless (ref $claims eq 'HASH') {
+        JSON::WebToken::Exception->throw(
+            code    => ERROR_JWT_INVALID_PARAMETER,
+            message => 'Usage: JSON::WebToken->encode(\%claims [, $secret, $algorithm, \%$extra_headers ])',
+        );
+    }
 
     $algorithm     ||= 'HS256';
     $extra_headers ||= {};
@@ -66,7 +73,12 @@ sub encode {
     };
 
     $algorithm = $header->{alg};
-    croak 'secret must be specified' if $algorithm ne 'none' && !defined $secret;
+    if ($algorithm ne 'none' && !defined $secret) {
+        JSON::WebToken::Exception->throw(
+            code    => ERROR_JWT_MISSING_SECRET,
+            message => 'secret must be specified',
+        );
+    }
 
     my $header_segment  = encode_base64url(encode_json $header);
     my $claims_segment  = encode_base64url(encode_json $claims);
@@ -84,13 +96,28 @@ sub encode_jwt {
 
 sub decode {
     my ($class, $jwt, $secret, $is_verify) = @_;
-    croak 'Usage: JSON::WebToken->decode($jwt [, $secret, $is_verify ])' unless $jwt;
+    unless (defined $jwt) {
+        JSON::WebToken::Exception->throw(
+            code    => ERROR_JWT_INVALID_PARAMETER,
+            message => 'Usage: JSON::WebToken->decode($jwt [, $secret, $is_verify ])',
+        );
+    }
 
     $is_verify = 1 unless defined $is_verify;
-    croak 'secret must be specified' if $is_verify && !defined $secret;
+    if ($is_verify && !defined $secret) {
+        JSON::WebToken::Exception->throw(
+            code    => ERROR_JWT_MISSING_SECRET,
+            message => 'secret must be specified',
+        );
+    }
 
     my $segments = [ split '\.', $jwt ];
-    croak "Not enough or too many segments by $jwt" unless @$segments >= 2 && @$segments <= 4;
+    unless (@$segments >= 2 && @$segments <= 4) {
+        JSON::WebToken::Exception->throw(
+            code    => ERROR_JWT_INVALID_SEGMENT_COUNT,
+            message => "Not enough or too many segments by $jwt",
+        );
+    }
 
     my ($header_segment, $claims_segment, $crypto_segment) = @$segments;
     my $signature_input = join '.', $header_segment, $claims_segment;
@@ -102,7 +129,10 @@ sub decode {
         $signature = decode_base64url($crypto_segment) if $header->{alg} ne 'none' && $is_verify;
     };
     if (my $e = $@) {
-        croak 'Invalid segment encoding';
+        JSON::WebToken::Exception->throw(
+            code    => ERROR_JWT_INVALID_SEGMENT_ENCODING,
+            message => 'Invalid segment encoding',
+        );
     }
 
     return $claims unless $is_verify;
@@ -112,11 +142,18 @@ sub decode {
     }
 
     my $algorithm = $header->{alg};
-    croak "Signature must be the empty string when alg is none"
-        if $algorithm eq 'none' and $crypto_segment;
+    if ($algorithm eq 'none' and $crypto_segment) {
+        JSON::WebToken::Exception->throw(
+            code    => ERROR_JWT_UNWANTED_SIGNATURE,
+            message => 'Signature must be the empty string when alg is none',
+        );
+    }
 
     unless ($class->_verify($algorithm, $signature_input, $secret, $signature)) {
-        croak "Invalid signature by $signature";
+        JSON::WebToken::Exception->throw(
+            code    => ERROR_JWT_INVALID_SIGNATURE,
+            message => "Invalid signature by $signature",
+        );
     }
 
     return $claims;
@@ -129,8 +166,12 @@ sub decode_jwt {
 
 sub add_signing_algorithm {
     my ($class, $algorithm, $signing_class) = @_;
-    croak 'Usage: JSON::WebToken->add_signing_algorithm($algorithm, $signing_class)'
-        unless $algorithm && $signing_class;
+    unless ($algorithm && $signing_class) {
+        JSON::WebToken::Exception->throw(
+            code    => ERROR_JWT_INVALID_PARAMETER,
+            message => 'Usage: JSON::WebToken->add_signing_algorithm($algorithm, $signing_class)',
+        );
+    }
     $ALGORITHM_MAP->{$algorithm} = $signing_class;
 }
 
@@ -157,7 +198,10 @@ sub _ensure_class_loaded {
 
     my $klass = $ALGORITHM_MAP->{$algorithm};
     unless ($klass) {
-        croak "`$algorithm` is Not supported siging algorithm";
+        JSON::WebToken::Exception->throw(
+            code    => ERROR_JWT_NOT_SUPPORTED_SIGNING_ALGORITHM,
+            message => "`$algorithm` is Not supported siging algorithm",
+        );
     }
 
     my $signing_class = $klass =~ s/^\+// ? $klass : "JSON::WebToken::Crypt::$klass";
@@ -302,9 +346,43 @@ Same as C<< encode() >> method.
 
 Same as C<< decode() >> method.
 
+=head1 ERROR CODES
+
+JSON::WebToken::Exception will be thrown with following code.
+
+=head2 ERROR_JWT_INVALID_PARAMETER
+
+When some method arguments are not valid.
+
+=head2 ERROR_JWT_MISSING_SECRET
+
+When secret is required. (C<< alg != "none" >>)
+
+=head2 ERROR_JWT_INVALID_SEGMENT_COUNT
+
+When JWT segment count is not between 2 and 4.
+
+=head2 ERROR_JWT_INVALID_SEGMENT_ENCODING
+
+When each JWT segment is not encoded by base64url.
+
+=head2 ERROR_JWT_UNWANTED_SIGNATURE
+
+When C<< alg == "none" >> but signature segment found.
+
+=head2 ERROR_JWT_INVALID_SIGNATURE
+
+When JWT signature is invalid.
+
+=head2 ERROR_JWT_NOT_SUPPORTED_SIGNING_ALGORITHM
+
+When given signing algorithm is not supported.
+
 =head1 AUTHOR
 
 xaicron E<lt>xaicron@cpan.orgE<gt>
+
+zentooo
 
 =head1 COPYRIGHT
 
