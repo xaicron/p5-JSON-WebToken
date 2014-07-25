@@ -3,7 +3,7 @@ package JSON::WebToken::JWK;
 use strict;
 use warnings;
 
-use MIME::Base64 qw(decode_base64url);
+use JSON::WebToken;
 
 sub new {
     my ($class, $key) = @_;
@@ -22,7 +22,7 @@ sub decode_param {
 
     return unless exists $self->{$key};
 
-    return decode_base64url($self->{$key});
+    return JSON::WebToken::decode_base64url($self->{$key});
 }
 
 42;
