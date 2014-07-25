@@ -2,7 +2,12 @@ use strict;
 use warnings;
 
 use Test::More;
+use Class::Load qw|try_load_class|;
 use JSON::WebToken;
+
+sub TRY_RSA() {
+    return try_load_class('Crypt::OpenSSL::RSA') && try_load_class('Crypt::OpenSSL::Bignum');
+}
 
 sub KEY_DATA() {
     return <<'EOT';
@@ -87,12 +92,18 @@ subtest 'decode + verify' => sub {
     ok(!$@, 'parse successful');
     is($jwt->header('kid'), 'example', 'get kid from header');
     is($jwt->claims('email'), 'example@example.com', 'get email from claims');
-    ok($jwt->verify, 'verify successful');
+
+    SKIP: {
+        skip "Crypt::OpenSSL::RSA && Bignum required to run this test", 1 unless TRY_RSA;
+        ok($jwt->verify, 'verify successful');
+    }
 
     done_testing;
 };
 
 subtest 'encode' => sub {
+    plan skip_all => "Crypt::OpenSSL::RSA && Bignum require to run these tests" unless TRY_RSA;
+
     my $jwt = JSON::WebToken->new;
     my $jwk_set = $jwt->jwk(KEY_DATA);
 
@@ -120,6 +131,8 @@ subtest 'encode' => sub {
 };
 
 subtest 'encode + decode + verify' => sub {
+    plan skip_all => "Crypt::OpenSSL::RSA && Bignum require to run these tests" unless TRY_RSA;
+
     my $jwt = JSON::WebToken->new;
     my $jwk_set = $jwt->jwk(KEY_DATA);
 
