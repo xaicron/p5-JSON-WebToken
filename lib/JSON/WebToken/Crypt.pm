@@ -13,5 +13,17 @@ sub verify {
     die 'verify method must be implements!'
 }
 
+sub sign_with_jwk {
+    my ($class, $alg, $msg, $key) = @_;
+
+    $class->sign($alg, $msg, $key->decode_param('k'));
+}
+
+sub verify_with_jwk {
+    my ($class, $alg, $msg, $key, $sign) = @_;
+
+    return $class->sign($alg, $msg, $key->decode_param('k')) eq $sign;
+}
+
 1;
 __END__
