@@ -1,3 +1,8 @@
+JWK
+http://tools.ietf.org/html/draft-ietf-jose-json-web-key-18
+JWA
+http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-31
+
 1. JWE Header
 2. JWE Encrypted Key
 3. JWE Ciphertext

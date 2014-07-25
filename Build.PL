@@ -23,6 +23,16 @@ my %args = (
         'Module::Build' => 0.38,
     },
 
+    requires => {
+        'JSON' => 0,
+        'Crypt::OpenSSL::Bignum' => 0,
+        'Crypt::OpenSSL::RSA' => 0,
+    },
+
+    test_requires => {
+        'Test::Mock::Guard' => 0,
+    },
+
     name            => 'JSON-WebToken',
     module_name     => 'JSON::WebToken',
     allow_pureperl => 0,
