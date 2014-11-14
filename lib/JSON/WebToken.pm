@@ -9,7 +9,7 @@ our $VERSION = '0.08';
 use parent 'Exporter';
 
 use Carp qw(croak);
-use JSON qw(encode_json decode_json);
+use JSON qw(decode_json);
 use MIME::Base64 qw(encode_base64 decode_base64);
 use Module::Runtime qw(use_module);
 
@@ -80,8 +80,8 @@ sub encode {
         );
     }
 
-    my $header_segment  = encode_base64url(encode_json $header);
-    my $claims_segment  = encode_base64url(encode_json $claims);
+    my $header_segment  = encode_base64url(_encode_json($header));
+    my $claims_segment  = encode_base64url(_encode_json($claims));
     my $signature_input = join '.', $header_segment, $claims_segment;
 
     my $signature = $class->_sign($algorithm, $signature_input, $secret);
@@ -92,6 +92,11 @@ sub encode {
 sub encode_jwt {
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
     __PACKAGE__->encode(@_);
+}
+
+my $JSON; # cache
+sub _encode_json {
+    return ($JSON ||= JSON->new->utf8->canonical)->encode($_[0]);
 }
 
 sub decode {
