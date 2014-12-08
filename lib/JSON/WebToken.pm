@@ -95,16 +95,16 @@ sub encode_jwt {
 }
 
 sub decode {
-    my ($class, $jwt, $secret, $is_verify) = @_;
+    my ($class, $jwt, $secret, $verify_signature, $accept_algorithm_none) = @_;
     unless (defined $jwt) {
         JSON::WebToken::Exception->throw(
             code    => ERROR_JWT_INVALID_PARAMETER,
-            message => 'Usage: JSON::WebToken->decode($jwt [, $secret, $is_verify ])',
+            message => 'Usage: JSON::WebToken->decode($jwt [, $secret, $verify_signature, $accept_alg_none ])',
         );
     }
 
-    $is_verify = 1 unless defined $is_verify;
-    if ($is_verify && !defined $secret) {
+    $verify_signature = 1 unless defined $verify_signature;
+    if ($verify_signature && !defined $secret) {
         JSON::WebToken::Exception->throw(
             code    => ERROR_JWT_MISSING_SECRET,
             message => 'secret must be specified',
@@ -126,7 +126,7 @@ sub decode {
     eval {
         $header    = decode_json decode_base64url($header_segment);
         $claims    = decode_json decode_base64url($claims_segment);
-        $signature = decode_base64url($crypto_segment) if $header->{alg} ne 'none' && $is_verify;
+        $signature = decode_base64url($crypto_segment) if $header->{alg} ne 'none' && $verify_signature;
     };
     if (my $e = $@) {
         JSON::WebToken::Exception->throw(
@@ -135,7 +135,15 @@ sub decode {
         );
     }
 
-    return $claims unless $is_verify;
+    return $claims unless $verify_signature;
+
+    # https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-37#section-3.6
+    if ( $header->{alg} eq 'none' && ! $accept_algorithm_none ) {
+        JSON::WebToken::Exception->throw(
+            code    => ERROR_JWT_UNACCEPTABLE_ALGORITHM,
+            message => 'Algorithm "none" is not acceptable by default',
+        );
+    }
 
     if (ref $secret eq 'CODE') {
         $secret = $secret->($header, $claims);
