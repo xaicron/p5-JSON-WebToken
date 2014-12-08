@@ -99,7 +99,7 @@ sub decode {
     unless (defined $jwt) {
         JSON::WebToken::Exception->throw(
             code    => ERROR_JWT_INVALID_PARAMETER,
-            message => 'Usage: JSON::WebToken->decode($jwt [, $secret, $verify_signature, $accept_alg_none ])',
+            message => 'Usage: JSON::WebToken->decode($jwt [, $secret, $verify_signature, $accept_algorithm_none ])',
         );
     }
 
