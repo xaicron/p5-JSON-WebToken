@@ -326,7 +326,7 @@ If you want to create a C<< Plaintext JWT >>, should be specify C<< none >> for 
   #     'eyJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlLCJpc3MiOiJqb2UifQ',
   #     ''
 
-=head2 decode($jwt [, $secret, $is_verify ]) : HASH
+=head2 decode($jwt [, $secret, $verify_signature, $accept_algorithm_none ]) : HASH
 
 This method is decoding hash reference from JWT string.
 
@@ -350,7 +350,7 @@ SEE ALSO L<< JSON::WebToken::Crypt::HMAC >> or L<< JSON::WebToken::Crypt::RAS >>
 
 Same as C<< encode() >> method.
 
-=head2 decode_jwt($jwt [, $secret, $is_verify ]) : Hash
+=head2 decode_jwt($jwt [, $secret, $verify_signature, $accept_algorithm_none ]) : Hash
 
 Same as C<< decode() >> method.
 
