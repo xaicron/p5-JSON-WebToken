@@ -72,12 +72,12 @@
          "web" : "https://github.com/xaicron/p5-JSON-WebToken"
       }
    },
-   "version" : "0.08",
+   "version" : "0.09",
    "x_authority" : "cpan:XAICRON",
    "x_contributors" : [
       "Masaki Sawamura <sawamura.masaki@dena.jp>",
       "Ryo <ritou.06@gmail.com>",
       "yokoe.naosuke <yokoe.naosuke@dena.jp>",
-      "Yuji Shimada <xaicron@gmail.com>"
+      "xaicron <xaicron@gmail.com>"
    ]
 }

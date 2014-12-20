@@ -2,6 +2,9 @@ Revision history for Perl extension JSON::WebToken
 
 {{$NEXT}}
 
+0.09 2014-12-20T02:19:51Z
+    - #8 JWS implementations must not accept header with { "alg": "none" } by default. (zentooo++)
+
 0.08 2014-02-21T05:45:26Z
     - added exception class (zentooo++)
 
