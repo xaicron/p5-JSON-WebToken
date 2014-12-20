@@ -38,7 +38,7 @@ my $guard = mock_guard('JSON::WebToken' => {
 my $jwt = JSON::WebToken->encode({}, $secret, 'none');
 is $jwt, $expects;
 
-my $data = JSON::WebToken->decode($jwt, $secret);
+my $data = JSON::WebToken->decode($jwt, $secret, 1, 1);
 is_deeply $data, decode_json $claims;
 
 done_testing;

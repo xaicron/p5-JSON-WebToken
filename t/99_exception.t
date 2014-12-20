@@ -61,9 +61,16 @@ subtest 'invalid signature' => sub {
     is $@->code, ERROR_JWT_INVALID_SIGNATURE;
 };
 
-subtest 'signature must be empty' => sub {
+subtest 'unacceptable algorithm' => sub {
     my $jwt = encode_jwt { foo => 'bar' }, '', 'none';
     eval { decode_jwt "$jwt"."xxx", 'foo' };
+    like $@, qr/Algorithm "none" is not acceptable by default/;
+    is $@->code, ERROR_JWT_UNACCEPTABLE_ALGORITHM;
+};
+
+subtest 'signature must be empty' => sub {
+    my $jwt = encode_jwt { foo => 'bar' }, '', 'none';
+    eval { decode_jwt "$jwt"."xxx", 'foo', 1, 1 };
     like $@, qr/Signature must be the empty string when alg is none/;
     is $@->code, ERROR_JWT_UNWANTED_SIGNATURE;
 };

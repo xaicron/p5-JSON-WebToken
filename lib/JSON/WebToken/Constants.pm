@@ -12,6 +12,7 @@ my @error_code = qw/
     ERROR_JWT_UNWANTED_SIGNATURE
     ERROR_JWT_INVALID_SIGNATURE
     ERROR_JWT_NOT_SUPPORTED_SIGNING_ALGORITHM
+    ERROR_JWT_UNACCEPTABLE_ALGORITHM
 /;
 
 our @EXPORT = @error_code;
@@ -29,6 +30,7 @@ use constant {
     ERROR_JWT_UNWANTED_SIGNATURE              => "unwanted_signature",
     ERROR_JWT_INVALID_SIGNATURE               => "invalid_signature",
     ERROR_JWT_NOT_SUPPORTED_SIGNING_ALGORITHM => "not_supported_signing_algorithm",
+    ERROR_JWT_UNACCEPTABLE_ALGORITHM          => "unacceptable_algorithm",
 };
 
 1;

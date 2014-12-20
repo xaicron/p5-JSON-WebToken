@@ -39,15 +39,6 @@ test_encode_decode(
 );
 
 test_encode_decode(
-    desc  => 'with algorithm: none',
-    input => {
-        claims    => { foo => 'bar' },
-        secret    => 'secret',
-        algorithm => 'none',
-    },
-);
-
-test_encode_decode(
     desc  => 'with header_fields',
     input => {
         claims       => { foo => 'bar' },
