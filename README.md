@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/xaicron/p5-JSON-WebToken.png?branch=master)](https://travis-ci.org/xaicron/p5-JSON-WebToken)
+[![Build Status](https://travis-ci.org/xaicron/p5-JSON-WebToken.svg?branch=master)](https://travis-ci.org/xaicron/p5-JSON-WebToken)
 # NAME
 
 JSON::WebToken - JSON Web Token (JWT) implementation
@@ -71,7 +71,7 @@ If you want to create a `Plaintext JWT`, should be specify `none` for the algori
     #     'eyJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlLCJpc3MiOiJqb2UifQ',
     #     ''
 
-## decode($jwt \[, $secret, $is\_verify \]) : HASH
+## decode($jwt \[, $secret, $verify\_signature, $accept\_algorithm\_none \]) : HASH
 
 This method is decoding hash reference from JWT string.
 
@@ -95,7 +95,7 @@ SEE ALSO [JSON::WebToken::Crypt::HMAC](https://metacpan.org/pod/JSON::WebToken::
 
 Same as `encode()` method.
 
-## decode\_jwt($jwt \[, $secret, $is\_verify \]) : Hash
+## decode\_jwt($jwt \[, $secret, $verify\_signature, $accept\_algorithm\_none \]) : Hash
 
 Same as `decode()` method.
 
