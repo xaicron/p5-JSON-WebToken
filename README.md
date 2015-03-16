@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/xaicron/p5-JSON-WebToken.svg?branch=master)](https://travis-ci.org/xaicron/p5-JSON-WebToken)
+
 # NAME
 
 JSON::WebToken - JSON Web Token (JWT) implementation
@@ -26,7 +26,7 @@ JSON::WebToken - JSON Web Token (JWT) implementation
 
 JSON::WebToken is JSON Web Token (JWT) implementation for Perl
 
-__THIS MODULE IS ALPHA LEVEL INTERFACE.__
+**THIS MODULE IS ALPHA LEVEL INTERFACE.**
 
 # METHODS
 
@@ -71,11 +71,14 @@ If you want to create a `Plaintext JWT`, should be specify `none` for the algori
     #     'eyJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlLCJpc3MiOiJqb2UifQ',
     #     ''
 
-## decode($jwt \[, $secret, $verify\_signature, $accept\_algorithm\_none \]) : HASH
+## decode($jwt \[, $secret, $verify\_signature, $accepted\_algorithms \]) : HASH
 
 This method is decoding hash reference from JWT string.
 
-    my $claims = JSON::WebToken->decode($jwt, $secret);
+    my $claims = JSON::WebToken->decode($jwt, $secret, 1, ["RS256"]);
+
+Any signing algorithm (except "none") is acceptable by default,
+so you should check it with $accepted\_algorithms parameter.
 
 ## add\_signing\_algorithm($algorithm, $class)
 
@@ -95,7 +98,7 @@ SEE ALSO [JSON::WebToken::Crypt::HMAC](https://metacpan.org/pod/JSON::WebToken::
 
 Same as `encode()` method.
 
-## decode\_jwt($jwt \[, $secret, $verify\_signature, $accept\_algorithm\_none \]) : Hash
+## decode\_jwt($jwt \[, $secret, $verify\_signature, $accepted\_algorithms \]) : Hash
 
 Same as `decode()` method.
 
@@ -130,6 +133,10 @@ When JWT signature is invalid.
 ## ERROR\_JWT\_NOT\_SUPPORTED\_SIGNING\_ALGORITHM
 
 When given signing algorithm is not supported.
+
+## ERROR\_JWT\_UNACCEPTABLE\_ALGORITHM
+
+When given signing algorithm is not included in acceptable\_algorithms.
 
 # AUTHOR
 

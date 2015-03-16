@@ -95,11 +95,28 @@ sub encode_jwt {
 }
 
 sub decode {
-    my ($class, $jwt, $secret, $verify_signature, $accept_algorithm_none) = @_;
+    my ($class, $jwt, $secret, $verify_signature, $accepted_algorithms) = @_;
+
+    if (ref $accepted_algorithms eq 'ARRAY') {
+        $accepted_algorithms = $accepted_algorithms;
+    }
+    elsif (defined $accepted_algorithms) {
+        if ($accepted_algorithms =~/^[0|1]$/) {
+            warn "accept_algorithm none is deprecated"; 
+            $accepted_algorithms = [ grep { $_ ne "none" || !! $accepted_algorithms } (keys %$ALGORITHM_MAP) ];
+        }
+        else {
+            $accepted_algorithms = [ $accepted_algorithms ] ;
+        }
+    }
+    else {
+        $accepted_algorithms = [ grep { $_ ne "none" } (keys %$ALGORITHM_MAP) ];
+    }
+    
     unless (defined $jwt) {
         JSON::WebToken::Exception->throw(
             code    => ERROR_JWT_INVALID_PARAMETER,
-            message => 'Usage: JSON::WebToken->decode($jwt [, $secret, $verify_signature, $accept_algorithm_none ])',
+            message => 'Usage: JSON::WebToken->decode($jwt [, $secret, $verify_signature, $accepted_algorithms ])',
         );
     }
 
@@ -137,11 +154,12 @@ sub decode {
 
     return $claims unless $verify_signature;
 
+    my $algorithm = $header->{alg};
     # https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-37#section-3.6
-    if ( $header->{alg} eq 'none' && ! $accept_algorithm_none ) {
+    unless ( grep { $_ eq $algorithm } (@$accepted_algorithms) ) {
         JSON::WebToken::Exception->throw(
             code    => ERROR_JWT_UNACCEPTABLE_ALGORITHM,
-            message => 'Algorithm "none" is not acceptable by default',
+            message => "Algorithm \"$algorithm\" is not acceptable. Followings are accepted:" . join(",", @$accepted_algorithms) ,
         );
     }
 
@@ -149,7 +167,6 @@ sub decode {
         $secret = $secret->($header, $claims);
     }
 
-    my $algorithm = $header->{alg};
     if ($algorithm eq 'none' and $crypto_segment) {
         JSON::WebToken::Exception->throw(
             code    => ERROR_JWT_UNWANTED_SIGNATURE,
@@ -326,11 +343,14 @@ If you want to create a C<< Plaintext JWT >>, should be specify C<< none >> for 
   #     'eyJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlLCJpc3MiOiJqb2UifQ',
   #     ''
 
-=head2 decode($jwt [, $secret, $verify_signature, $accept_algorithm_none ]) : HASH
+=head2 decode($jwt [, $secret, $verify_signature, $accepted_algorithms ]) : HASH
 
 This method is decoding hash reference from JWT string.
 
-  my $claims = JSON::WebToken->decode($jwt, $secret);
+  my $claims = JSON::WebToken->decode($jwt, $secret, 1, ["RS256"]);
+
+Any signing algorithm (except "none") is acceptable by default,
+so you should check it with $accepted_algorithms parameter.
 
 =head2 add_signing_algorithm($algorithm, $class)
 
@@ -350,7 +370,7 @@ SEE ALSO L<< JSON::WebToken::Crypt::HMAC >> or L<< JSON::WebToken::Crypt::RAS >>
 
 Same as C<< encode() >> method.
 
-=head2 decode_jwt($jwt [, $secret, $verify_signature, $accept_algorithm_none ]) : Hash
+=head2 decode_jwt($jwt [, $secret, $verify_signature, $accepted_algorithms ]) : Hash
 
 Same as C<< decode() >> method.
 
@@ -385,6 +405,10 @@ When JWT signature is invalid.
 =head2 ERROR_JWT_NOT_SUPPORTED_SIGNING_ALGORITHM
 
 When given signing algorithm is not supported.
+
+=head2 ERROR_JWT_UNACCEPTABLE_ALGORITHM
+
+When given signing algorithm is not included in acceptable_algorithms.
 
 =head1 AUTHOR
 

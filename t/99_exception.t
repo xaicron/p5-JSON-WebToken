@@ -64,13 +64,34 @@ subtest 'invalid signature' => sub {
 subtest 'unacceptable algorithm' => sub {
     my $jwt = encode_jwt { foo => 'bar' }, '', 'none';
     eval { decode_jwt "$jwt"."xxx", 'foo' };
-    like $@, qr/Algorithm "none" is not acceptable by default/;
+    like $@, qr/Algorithm "none" is not acceptable/;
     is $@->code, ERROR_JWT_UNACCEPTABLE_ALGORITHM;
 };
 
+subtest 'deprecated: accept_algorithm_none' => sub {
+    my $jwt = encode_jwt { foo => 'bar' }, '', 'none';
+    ok decode_jwt $jwt, "", 1, 1;
+    eval { decode_jwt "$jwt", "", 1, 0 };
+    like $@, qr/Algorithm "none" is not acceptable/;
+    is $@->code, ERROR_JWT_UNACCEPTABLE_ALGORITHM;
+};
+
+
+subtest 'unacceptable algorithm' => sub {
+    my $jwt = encode_jwt { foo => 'bar' }, 'secret', 'HS256';
+    ok decode_jwt "$jwt", 'secret', 1, ["HS256"];
+    ok decode_jwt "$jwt", 'secret', 1, "HS256";
+    eval { decode_jwt "$jwt", 'secret', 1, ["RS256"] };
+    like $@, qr/Algorithm "HS256" is not acceptable. Followings are accepted:RS256/;
+    is $@->code, ERROR_JWT_UNACCEPTABLE_ALGORITHM;
+
+
+};
+
+
 subtest 'signature must be empty' => sub {
     my $jwt = encode_jwt { foo => 'bar' }, '', 'none';
-    eval { decode_jwt "$jwt"."xxx", 'foo', 1, 1 };
+    eval { decode_jwt "$jwt"."xxx", 'foo', 1, "none" };
     like $@, qr/Signature must be the empty string when alg is none/;
     is $@->code, ERROR_JWT_UNWANTED_SIGNATURE;
 };
