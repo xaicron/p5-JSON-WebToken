@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/xaicron/p5-JSON-WebToken.svg?branch=master)](https://travis-ci.org/xaicron/p5-JSON-WebToken)
 # NAME
 
 JSON::WebToken - JSON Web Token (JWT) implementation
