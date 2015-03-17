@@ -8,7 +8,7 @@ our $VERSION = '0.09';
 
 use parent 'Exporter';
 
-use Carp qw(croak);
+use Carp qw(croak carp);
 use JSON qw(encode_json decode_json);
 use MIME::Base64 qw(encode_base64 decode_base64);
 use Module::Runtime qw(use_module);
@@ -104,18 +104,18 @@ sub decode {
     }
     elsif (defined $accepted_algorithms) {
         if ($accepted_algorithms =~/^[01]$/) {
-            warn "accept_algorithm none is deprecated"; 
-            $accepted_algorithms = !!$accepted_algorithms ? 
+            carp "accept_algorithm none is deprecated";
+            $accepted_algorithms = !!$accepted_algorithms ?
                 [@$DEFAULT_ALLOWED_ALGORITHMS, "none"] :  $DEFAULT_ALLOWED_ALGORITHMS;
         }
         else {
-            $accepted_algorithms = [ $accepted_algorithms ] ;
+            $accepted_algorithms = [ $accepted_algorithms ];
         }
     }
     else {
         $accepted_algorithms = $DEFAULT_ALLOWED_ALGORITHMS;
     }
-    
+
     unless (defined $jwt) {
         JSON::WebToken::Exception->throw(
             code    => ERROR_JWT_INVALID_PARAMETER,
