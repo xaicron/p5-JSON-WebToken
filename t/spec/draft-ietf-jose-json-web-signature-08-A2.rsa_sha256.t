@@ -111,7 +111,7 @@ ok $rsa->verify($singing_input, $S);
 
 my $guard = mock_guard(
     'JSON::WebToken' => {
-        encode_json => sub {
+        _encode_json => sub {
             my $array = [$header, $claims];
             sub { shift @$array };
         }->(),
