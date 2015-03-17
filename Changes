@@ -2,6 +2,9 @@ Revision history for Perl extension JSON::WebToken
 
 {{$NEXT}}
 
+0.10 2015-03-17T08:21:12Z
+    - #9 Added acceptable headers args (maedama++)
+
 0.09 2014-12-20T02:19:51Z
     - #8 JWS implementations must not accept header with { "alg": "none" } by default. (zentooo++)
 

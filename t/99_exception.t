@@ -76,7 +76,6 @@ subtest 'deprecated: accept_algorithm_none' => sub {
     is $@->code, ERROR_JWT_UNACCEPTABLE_ALGORITHM;
 };
 
-
 subtest 'unacceptable algorithm' => sub {
     my $jwt = encode_jwt { foo => 'bar' }, 'secret', 'HS256';
     ok decode_jwt "$jwt", 'secret', 1, ["HS256"];
@@ -87,7 +86,6 @@ subtest 'unacceptable algorithm' => sub {
 
 
 };
-
 
 subtest 'signature must be empty' => sub {
     my $jwt = encode_jwt { foo => 'bar' }, '', 'none';

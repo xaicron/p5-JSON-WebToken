@@ -4,7 +4,7 @@
       "xaicron <xaicron@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v2.3.0, CPAN::Meta::Converter version 2.142060",
+   "generated_by" : "Minilla/v2.3.0, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
@@ -72,12 +72,13 @@
          "web" : "https://github.com/xaicron/p5-JSON-WebToken"
       }
    },
-   "version" : "0.09",
+   "version" : "0.10",
    "x_authority" : "cpan:XAICRON",
    "x_contributors" : [
       "Masaki Sawamura <sawamura.masaki@dena.jp>",
       "Ryo <ritou.06@gmail.com>",
       "yokoe.naosuke <yokoe.naosuke@dena.jp>",
+      "maedama <maedama85@gmail.com>",
       "xaicron <xaicron@gmail.com>"
    ]
 }
