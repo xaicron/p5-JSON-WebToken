@@ -98,10 +98,10 @@ sub decode {
     my ($class, $jwt, $secret, $verify_signature, $accepted_algorithms) = @_;
 
     if (ref $accepted_algorithms eq 'ARRAY') {
-        $accepted_algorithms = $accepted_algorithms;
+        # do nothing
     }
     elsif (defined $accepted_algorithms) {
-        if ($accepted_algorithms =~/^[0|1]$/) {
+        if ($accepted_algorithms =~/^[01]$/) {
             warn "accept_algorithm none is deprecated"; 
             $accepted_algorithms = [ grep { $_ ne "none" || !! $accepted_algorithms } (keys %$ALGORITHM_MAP) ];
         }
