@@ -53,6 +53,8 @@ our $ALGORITHM_MAP = {
 #    A256GCM         => '',
 #};
 
+our $DEFAULT_ALLOWED_ALGORITHMS = [ grep { $_ ne "none" } (keys %$ALGORITHM_MAP) ];
+
 sub encode {
     my ($class, $claims, $secret, $algorithm, $extra_headers) = @_;
     unless (ref $claims eq 'HASH') {
@@ -103,14 +105,15 @@ sub decode {
     elsif (defined $accepted_algorithms) {
         if ($accepted_algorithms =~/^[01]$/) {
             warn "accept_algorithm none is deprecated"; 
-            $accepted_algorithms = [ grep { $_ ne "none" || !! $accepted_algorithms } (keys %$ALGORITHM_MAP) ];
+            $accepted_algorithms = !!$accepted_algorithms ? 
+                [@$DEFAULT_ALLOWED_ALGORITHMS, "none"] :  $DEFAULT_ALLOWED_ALGORITHMS;
         }
         else {
             $accepted_algorithms = [ $accepted_algorithms ] ;
         }
     }
     else {
-        $accepted_algorithms = [ grep { $_ ne "none" } (keys %$ALGORITHM_MAP) ];
+        $accepted_algorithms = $DEFAULT_ALLOWED_ALGORITHMS;
     }
     
     unless (defined $jwt) {
@@ -197,6 +200,7 @@ sub add_signing_algorithm {
             message => 'Usage: JSON::WebToken->add_signing_algorithm($algorithm, $signing_class)',
         );
     }
+    push(@$DEFAULT_ALLOWED_ALGORITHMS, $algorithm);
     $ALGORITHM_MAP->{$algorithm} = $signing_class;
 }
 
