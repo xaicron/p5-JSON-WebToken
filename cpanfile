@@ -2,6 +2,7 @@ requires 'Carp';
 requires 'parent';
 requires 'Module::Runtime';
 requires 'Digest::SHA';
+requires 'Crypt::OpenSSL::RSA';
 requires 'Exporter';
 requires 'JSON';
 requires 'MIME::Base64';
